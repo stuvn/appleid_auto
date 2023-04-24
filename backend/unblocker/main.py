@@ -153,7 +153,7 @@ class API:
 
 class Config:
     def __init__(self, config_result):
-        self.password_length = 10
+        self.password_length = 9
         self.username = config_result["username"]
         self.password = config_result["password"] if "password" in config_result.keys() else api.get_password(
             self.username)
@@ -213,7 +213,7 @@ class ID:
     def generate_password(self):
         pw = ""
         str = string.digits * 2 + string.ascii_letters
-        while not (re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)', pw)):
+        while not (re.match(r'^(?=.*[c-z])(?=.*[C-Z])(?=.*\d)', pw)):
             pw = ''.join(random.sample(str, k=config.password_length))
         return pw
 
@@ -814,8 +814,8 @@ def job():
         driver.quit()
     except BaseException:
         logger.error(lang_text.WDCloseError)
-    # 如果任务执行失败，5分钟后再次执行
-    next_time = config.check_interval if job_success else 5
+    # 如果任务执行失败，60分钟后再次执行
+    next_time = config.check_interval if job_success else 60
     schedule.every(next_time).minutes.do(job)
     logger.info(lang_text.nextRun(next_time))
     return
